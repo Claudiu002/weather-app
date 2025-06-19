@@ -1,0 +1,91 @@
+body{
+    color: black;
+    background-color: #4298ad;
+    padding: 0 30px 0 30px;
+}
+
+.hidden {
+  display: none;
+}
+
+#title{
+    text-align: center;
+    font-size: 50px;
+}
+
+
+
+#errors {
+    background-color: white;
+    color:#555151;
+    border-radius:10px; 
+}
+
+#city-input{
+    font-size: 15px;
+    border-radius: 10px;
+    padding: 10px 60% 10px 2px;
+}
+
+#search-btn {
+    font-size: 15px;
+    border-radius: 10px;
+    padding: 10px 10px 10px 5px;
+    background-color: #1b677a;
+    color: black;
+    transition: all 1s ease;
+
+}
+#search-btn:hover {
+    color:white;
+    background-color: #0d343d;
+}
+#weather-img {
+  width: 100px;
+  height: auto;
+  margin: 10px 0;
+}
+#main {
+    background-color: #7bd7ee;
+    border-radius: 10px;
+    padding: 15px 10px 10px 10px;
+    margin-top: 70px;
+}
+
+#first-block {
+    text-align: center;
+    font-size: x-large;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    text-align: center;
+}
+
+#info {
+    padding: 10px 0 0 15px;
+    font-size: 20px;
+
+}
+
+
+#currentLocation-btn {
+    text-align: center;
+    border-radius: 10px;
+    background-color: rgb(35, 160, 35);
+    transition: all 1s ease;
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+#currentLocation-btn:hover{
+    background-color: rgb(18, 82, 18);
+    color: #b5baba;
+}
+
+footer {
+    margin-top: 15px;
+}
