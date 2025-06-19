@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # weather-app
 A modern weather application built with vanilla JavaScript
 =======
@@ -34,4 +34,3 @@ Bun venit în aplicația care te va pune la curent, în orice zi, cu tot ce se s
 ## 👨‍💻 Autor
 
 Mă numesc Onaca Claudiu și sunt pasionat de programarea de aplicații web și site-uri.
->>>>>>> 540b30c (Initial project setup with modular structure)
