@@ -1,60 +1,142 @@
-let ui, service;
+// Ce module noi trebuie importate?
+import { getCoords } from './modules/location-service.js'
+import {
+  getCurrentWeather,
+  getWeatherByCoords,
+  getCurrentWeatherWithFallback,
+} from './modules/weather-service.js'
+import {
+  saveUserPreferences,
+  loadUserPreferences,
+  updateTemperatureDisplay,
+  displayWeather,
+  showError,
+  clearError,
+  getElements,
+} from './modules/ui-controller.js'
+import { CONFIG } from './modules/config.js';
 
+const elements = getElements();
 async function init() {
-  ui = await import('./modules/ui-controller.js');
-  service = await import('./modules/weather-service.js');
-  const config = await import('./modules/config.js');
+  try {
+    const city = document.querySelector("#city-input").value.trim();
 
-  ui.displayWeather(config.MOCK_DATA);
+    if (city === '') {
+      await handleLocationSearch();
+    } else {
+      setupEventListeners(elements);
+    }
 
-  const data = await service.getCurrentWeather('Bucuresti');
-  if (data) {
-    ui.displayWeather(data);
-  } else {
-    ui.showError("Nu s-au putut obține datele meteo.");
+    elements.unitSelect.addEventListener('change', async (e) => {
+      const newUnit = e.target.value;
+      CONFIG.DEFAULT_UNITS = newUnit;
+
+      const currentPrefs = loadUserPreferences();
+      saveUserPreferences(newUnit, currentPrefs.lang);
+
+      if (elements.cityName.textContent.trim() !== '') {
+        const city = document.querySelector('#city-input').value.trim();
+        const data = await getCurrentWeather(city);
+        updateTemperatureDisplay(elements, data.temp, newUnit);
+        if (data) {
+          displayWeather(elements, data);
+        }
+      }
+    });
+
+    elements.langSelect.addEventListener('change', async (e) => {
+      const newLang = e.target.value;
+      CONFIG.DEFAULT_LANG = newLang;
+
+      const currentPrefs = loadUserPreferences();
+      saveUserPreferences(currentPrefs.unit, newLang);
+
+      if (elements.cityName.textContent.trim() !== '') {
+        const city = document.querySelector('#city-input').value.trim();
+        const data = await getCurrentWeather(city);
+        if (data) {
+          displayWeather(elements, data);
+        }
+      }
+    });
+
+    const returnButton = document.querySelector("#currentLocation-btn");
+returnButton.addEventListener('click', async () => {
+  const city = document.querySelector("#city-input").value.trim();
+  if(city !== "")
+    await handleLocationSearch();
+
+})
+  } catch (error) {
+    console.error("Eroare", error.message);
   }
-
-  ui.showError("Test");
-
-  setupEventListeners();
 }
+getElements().langSelect.addEventListener('change', async (e) => {
+  const newLang = e.target.value;
+  CONFIG.DEFAULT_LANG = newLang;
+
+
+  const currentPrefs = loadUserPreferences();
+  saveUserPreferences(newUnit, currentPrefs.lang)
+
+  if (getElements().cityName.textContent.trim() !== '') {
+    const city = document.querySelector('#city-input').value.trim();
+    const data = await getCurrentWeather(city);
+    if (data) {
+      displayWeather(elements, data);
+    }
+  }
+})
+  
 
 const setupEventListeners = () => {
   const button = document.querySelector("#search-btn");
   const input = document.querySelector("#city-input");
 
-  button.addEventListener('click', handleSearch);
-  input.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') handleSearch();
-  });
-};
-
-const handleSearch = async () => {
-  ui.clearError();
-  const input = document.querySelector('#city-input');
-  const loading = document.querySelector('#loading');
+button.addEventListener('click', async () => {
   const city = input.value.trim();
-
-  if (!isValidCity(city)) {
-    ui.showError("Te rugăm introdu un nume de oraș valid.");
-    return;
+  const data = await getCurrentWeatherWithFallback(city);
+  if (data) {
+    displayWeather(data);
   }
+});
+ input.addEventListener('keypress', async (e) => {
+  if (e.key === 'Enter') {
+    const city = input.value.trim();
+    const data = await getCurrentWeatherWithFallback(city);
+    if(data) displayWeather(data);
+  }
+});
+};
 
-  loading.textContent = "Se încarcă...";
-  loading.style.display = 'block';
 
+
+
+
+const handleLocationSearch = async () => {
   try {
-    const data = await service.getCurrentWeather(city);
-    ui.displayWeather(data);
+    // Cum folosești noul location service?
+    showLoading(elements, 'Detectez locația...')
+
+    const coords = await getCoords()
+
+    // Cum afișezi diferit pentru GPS vs IP location?
+    if (coords.source === 'ip') {
+      showMessage(elements, 'Locație aproximativă bazată pe IP', 'warning')
+    }
+
+    showLoading(elements, 'Încarc vremea...')
+    const weather = await getWeatherByCoords(coords.latitude, coords.longitude)
+
+    displayWeather(elements, weather)
   } catch (error) {
-    ui.showError("Nu s-au putut obține datele meteo.");
-  } finally {
-    loading.style.display = 'none';
+    // Cum gestionezi când nici un serviciu de locație nu funcționează?
+    showError(elements, `Locația nu a putut fi determinată: ${error.message}`)
   }
-};
 
-const isValidCity = (city) => {
-  return city.length >= 2 && /^[a-zA-ZăâîșțĂÂÎȘȚ\s-]+$/.test(city);
-};
+}
 
-init().catch(console.error);
+
+document.addEventListener("DOMContentLoaded", () => {
+  init();
+});

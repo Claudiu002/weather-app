@@ -23,20 +23,41 @@
 
             </div>
         </header>
+        <br>
+        <div class="controls">
+            <div class="control-group">
+                <label for="unit-select">Unitatea temperaturii:</label>
+                <select id="unit-select">
+                    <option value="metric" selected>Celsius (°C)</option>
+                    <option value="imperial">Fahrenheit (°F)</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="lang-select">Limba descrierilor:&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <select id="lang-select">
+                    <option value="ro" selected>Română</option>
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    <option value="de">Deutsch</option>
+                    <option value="es">Español</option>
+                </select>
+            </div>
+        </div>
         <main id="main">
             <div id="first-block">
                 <h2 id="city-name">Bucuresti</h2>
                 <img id="weather-img" src="#">
                 <h2 id="temperatura">22</h2>
-                <h3 id="weather-status">bine</h3>
+                <h3 id="weather-status">Senin</h3>
             </div>
             <div id="second-block">
-                <p id="info">Viteza vântului: <span id="viteza-vantului">-</span></p>
-                <p id="info">Presiunea: <span id="presiunea">-</span></p>
-                <p id="info">Vizibilitatea: <span id="vizibilitate">-</span></p>
-                <p id="info">Umiditatea: <span id="umiditatea">-</span></p>
-                <p id="info">Rasaritul: <span id="rasarit">-</span></p>
-                <p id="info">Apusul: <span id="apus">-</span></p>
+                <p id="info">Viteza vântului: <span id="viteza-vantului">12.6 km/h</span></p>
+                <p id="info">Presiunea: <span id="presiunea">1012 mmHg</span></p>
+                <p id="info">Vizibilitatea: <span id="vizibilitate">100000</span></p>
+                <p id="info">Umiditatea: <span id="umiditatea">50%</span></p>
+                <p id="info">Calitatea aerului: <span id="air-quality">45 (Sanatoasa)</span></p>
+                <p id="info">Rasaritul: <span id="rasarit">05:44 am</span></p>
+                <p id="info">Apusul: <span id="apus">09:30 pm</span></p>
             </div>
             <button id="currentLocation-btn">Locatia curenta</button>
         </main>
